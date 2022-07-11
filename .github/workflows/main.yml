@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: controller
-        uses: ansible-cloud/aap_controller_action@v1.0.0
+        uses: ansible-cloud/aap_controller_action@v1.0.1
       # Use the output from the `hello` step
       - name: The job template being executed
         run: echo "The job template is ${{ steps.controller.inputs.job_template }}"
