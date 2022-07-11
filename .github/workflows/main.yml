@@ -16,13 +16,12 @@ on:
         type: string
 
 jobs:
-  hello_world_job:
+  automation_controller_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Kick off Automation controller job
     steps:
-      - name: Hello world action step
+      - name: Load the ansible-cloud action
         id: controller
         uses: ansible-cloud/aap_controller_action@v1.0.2
-      # Use the output from the `hello` step
       - name: The job template being executed
         run: echo "The job template is ${{ steps.controller.inputs.job_template }}"
