@@ -5,7 +5,7 @@ on:
       validate_certs:
         description: 'Use SSL? (validate_certs)'
         required: true
-        default: false
+        default: 'false'
         type: choice
         options:
         - true

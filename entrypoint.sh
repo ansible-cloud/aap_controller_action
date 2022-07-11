@@ -14,4 +14,9 @@ if [ -z "$CONTROLLER_USERNAME" ]; then
   exit 1
 fi
 
+if [ -z "$CONTROLLER_PASSWORD" ]; then
+  echo "Automation controller password is not set. Exiting."
+  exit 1
+fi
+
 echo "END OF AAP - Automation controller Github Action"
