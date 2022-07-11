@@ -1,7 +1,11 @@
 #! /usr/bin/env bash
 
-echo "hello"
+echo "AAP - Automation controller Github Action"
 
-echo "Hello $1"
-time=$(date)
-echo "::set-output name=time::$time"
+if [ -z "$CONTROLLER_HOST" ]; then
+  echo "Automation controller host is not set. Exiting."
+  exit 1
+fi
+
+
+echo "END OF AAP - Automation controller Github Action"

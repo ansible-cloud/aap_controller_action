@@ -2,21 +2,16 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      validate_certs:
+        description: 'Use SSL? (validate_certs)'
         required: true
-        default: 'warning'
+        default: false
         type: choice
         options:
-        - info
-        - warning
-        - debug
-      print_tags:
-        description: 'True to print to STDOUT'
-        required: true
-        type: boolean
-      tags:
-        description: 'Test scenario tags'
+        - true
+        - false
+      job_template:
+        description: 'The Job Template name you want to launch'
         required: true
         type: string
 
@@ -26,10 +21,8 @@ jobs:
     name: A job to say hello
     steps:
       - name: Hello world action step
-        id: hello
+        id: controller
         uses: ansible-cloud/aap_controller_action@v1.0.0
-        with:
-          who-to-greet: 'Mona the Octocat'
       # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+      - name: The job template being executed
+        run: echo "The job template is ${{ steps.controller.inputs.job_template }}"

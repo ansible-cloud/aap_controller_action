@@ -1,16 +1,36 @@
 # action.yml
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'AAP Automation Controller Action'
+branding:
+  icon: 'arrow-right-circle'
+  color: 'red'
+description: 'Launch Job Templates or Workflow Template and retrieve information from job output'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  controller_host:
+    description: "Automation controller URL."
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  controller_host:
+    description: "Automation controller username."
+    required: false
+  controller_password:
+    description: "Automation controller password."
+    required: false
+  validate_certs:
+    required: false
+    default: "true"
+  job_template:
+    description: "Name or ID of project, job_template or workflow_job_template."
+    required: true
+  extra_vars:
+    description: "Pass extra command line variables to the playbook."
+    required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: docker
+  image: Dockerfile
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.job_template }}
+    - ${{ inputs.extra_vars }}
+  env:
+    CONTROLLER_HOST: ${{ inputs.controller_host }}
+    CONTROLLER_USERNAME: ${{ inputs.controller_username }}
+    CONTROLLER_PASSWORD: ${{ inputs.controller_password }}
+    CONTROLLER_VERIFY_SSL: ${{ inputs.validate_certs }}
