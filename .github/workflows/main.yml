@@ -29,5 +29,4 @@ jobs:
           CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
           CONTROLLER_VERIFY_SSL: false
       - name: The job template being executed
-        run: echo "The job template is ${{ steps.controller.inputs.job_template
-        }}"
+        run: echo "The job template is ${{ steps.controller.inputs.job_template }}"
