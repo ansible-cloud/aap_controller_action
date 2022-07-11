@@ -24,9 +24,9 @@ jobs:
         id: controller
         uses: ansible-cloud/aap_controller_action@v1.0.2
         with:
-          CONTROLLER_HOST: ${{ secrets.CONTROLLER_HOST }}
-          CONTROLLER_USERNAME: ${{ secrets.CONTROLLER_USERNAME }}
-          CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
-          CONTROLLER_VERIFY_SSL: false
+          controller_host: ${{ secrets.CONTROLLER_HOST }}
+          controller_username: ${{ secrets.CONTROLLER_USERNAME }}
+          controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
+          validate_certs: false
       - name: The job template being executed
         run: echo "The job template is ${{ steps.controller.inputs.job_template }}"
