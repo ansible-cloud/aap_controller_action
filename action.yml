@@ -26,11 +26,10 @@ inputs:
 runs:
   using: docker
   image: Dockerfile
-  args:
-    - ${{ inputs.job_template }}
-    - ${{ inputs.extra_vars }}
   env:
     CONTROLLER_HOST: ${{ inputs.controller_host }}
     CONTROLLER_USERNAME: ${{ inputs.controller_username }}
     CONTROLLER_PASSWORD: ${{ inputs.controller_password }}
     CONTROLLER_VERIFY_SSL: ${{ inputs.validate_certs }}
+    JOB_TEMPLATE: ${{ inputs.job_template }}
+    EXTRA_VARS: ${{ inputs.extra_vars }}

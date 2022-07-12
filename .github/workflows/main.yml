@@ -28,5 +28,7 @@ jobs:
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
           controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
           validate_certs: false
+          job_template: "AWS - ec2 enforce owner tag"
+          extra_vars: ""
       - name: The job template being executed
         run: echo "The job template is ${{ steps.controller.inputs.job_template }}"

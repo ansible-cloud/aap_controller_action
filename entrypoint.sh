@@ -19,4 +19,6 @@ if [ -z "$CONTROLLER_PASSWORD" ]; then
   exit 1
 fi
 
+echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
+
 echo "END OF AAP - Automation controller Github Action"
