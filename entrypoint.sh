@@ -43,8 +43,9 @@ tee playbook.yml << EOF
         controller_host: "$CONTROLLER_HOST"
 EOF
 
-cat playbook.yml
+ansible-galaxy collection list
+ls /root/.ansible/collections/ansible_collections
 
-ansible-playbook playbook.yml
+/usr/local/bin/ansible-playbook playbook.yml
 
 echo "END OF AAP - Automation controller Github Action"
