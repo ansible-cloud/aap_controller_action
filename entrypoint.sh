@@ -21,4 +21,25 @@ fi
 
 echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
 
+tee playbook.yml << EOF
+---
+- name: execute autmation job
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+
+    - name: Launch a job template with extra_vars on remote controller instance
+      awx.awx.job_launch:
+        job_template: "$JOB_TEMPLATE"
+        extra_vars:
+          var1: "My First Variable"
+          var2: "My Second Variable"
+          var3: "My Third Variable"
+        job_type: run
+
+EOF
+
+cat playbook.yml
+
 echo "END OF AAP - Automation controller Github Action"
