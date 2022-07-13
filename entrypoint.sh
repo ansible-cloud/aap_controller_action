@@ -50,8 +50,7 @@ tee playbook.yml << EOF
         controller_host: "$CONTROLLER_HOST"
 EOF
 
-ansible-galaxy collection list
-ls /root/.ansible/collections/ansible_collections
+echo "AAP Github Action - Executing Automation Job on Automation controller"
 
 /usr/local/bin/ansible-playbook playbook.yml
 
