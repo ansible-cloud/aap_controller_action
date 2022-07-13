@@ -61,7 +61,7 @@ tee playbook.yml << EOF
 
     - name: retrieve job info
       uri:
-        url: https://"$CONTROLLER_HOST"/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
+        url: https://$CONTROLLER_HOST/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
         method: GET
         user: "$CONTROLLER_USERNAME"
         password: "$CONTROLLER_PASSWORD"
@@ -82,6 +82,6 @@ if [ $? -eq 0 ]; then
 else
     echo "Ansible Job has failed"
     exit 1
-fi%
+fi
 
 echo "END OF AAP - Automation controller Github Action"
