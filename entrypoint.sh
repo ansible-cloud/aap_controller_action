@@ -48,6 +48,28 @@ tee playbook.yml << EOF
         controller_username: "$CONTROLLER_USERNAME"
         controller_password: "$CONTROLLER_PASSWORD"
         controller_host: "$CONTROLLER_HOST"
+
+    - name: Wait for job
+      awx.awx.job_wait:
+        job_id: "{{ job_output.id }}"
+        timeout: 1800
+        validate_certs: "$CONTROLLER_VERIFY_SSL"
+        controller_username: "$CONTROLLER_USERNAME"
+        controller_password: "$CONTROLLER_PASSWORD"
+        controller_host: "$CONTROLLER_HOST"
+
+    - name: retrieve job info
+      uri:
+        url: https://"$CONTROLLER_HOST"/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
+        method: GET
+        user: "$CONTROLLER_USERNAME"
+        password: "$CONTROLLER_PASSWORD"
+        validate_certs: "$CONTROLLER_VERIFY_SSL"
+        force_basic_auth: yes
+      register: playbook_output
+
+    - debug:
+        var: playbook_output.json.content
 EOF
 
 echo "AAP Github Action - Executing Automation Job on Automation controller"
