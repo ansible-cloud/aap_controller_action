@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /usr/bin/bash
 
 echo "AAP - Automation controller Github Action"
 
