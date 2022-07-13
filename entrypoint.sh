@@ -42,4 +42,6 @@ EOF
 
 cat playbook.yml
 
+ansible-playbook playbook.yml
+
 echo "END OF AAP - Automation controller Github Action"
