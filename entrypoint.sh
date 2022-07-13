@@ -25,6 +25,7 @@ echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
 tee ansible.cfg << EOF
 [defaults]
 COLLECTIONS_PATHS = /root/.ansible/collections
+stdout_callback=community.general.yaml
 
 EOF
 
