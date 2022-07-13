@@ -31,4 +31,4 @@ jobs:
           job_template: "AWS - ec2 enforce owner tag"
           extra_vars: ""
       - name: The job template being executed
-        run: echo "The job template is ${{ steps.controller.inputs.job_template }}"
+        run: echo "The job template is ${{ job_template }}"
