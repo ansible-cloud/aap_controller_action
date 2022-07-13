@@ -33,11 +33,14 @@ tee playbook.yml << EOF
       awx.awx.job_launch:
         job_template: "$JOB_TEMPLATE"
         extra_vars:
-          var1: "My First Variable"
+          your_region: "us-east-1"
           var2: "My Second Variable"
           var3: "My Third Variable"
         job_type: run
-
+        validate_certs: "$CONTROLLER_VERIFY_SSL"
+        controller_username: "$CONTROLLER_USERNAME"
+        controller_password: "$CONTROLLER_PASSWORD"
+        controller_host: "$CONTROLLER_HOST"
 EOF
 
 cat playbook.yml
