@@ -21,6 +21,14 @@ fi
 
 echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
 
+
+tee ansible.cfg << EOF
+[defaults]
+COLLECTIONS_PATHS = /root/.ansible/collections
+
+EOF
+
+
 tee playbook.yml << EOF
 ---
 - name: execute autmation job
