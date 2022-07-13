@@ -48,6 +48,7 @@ tee playbook.yml << EOF
         controller_username: "$CONTROLLER_USERNAME"
         controller_password: "$CONTROLLER_PASSWORD"
         controller_host: "$CONTROLLER_HOST"
+      register: job_output
 
     - name: Wait for job
       awx.awx.job_wait:
@@ -75,5 +76,12 @@ EOF
 echo "AAP Github Action - Executing Automation Job on Automation controller"
 
 /usr/local/bin/ansible-playbook playbook.yml
+
+if [ $? -eq 0 ]; then
+    echo "Ansible Job has executed successfully"
+else
+    echo "Ansible Job has failed"
+    exit 1
+fi%
 
 echo "END OF AAP - Automation controller Github Action"
