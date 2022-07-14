@@ -4,6 +4,7 @@ echo "AAP - Automation controller Github Action"
 
 echo "CONTROLLER_HOST is $CONTROLLER_HOST"
 echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
+echo "EXTRA_VARS is set to $EXTRA_VARS"
 echo "CONTROLLER_VERIFY_SSL is set to $CONTROLLER_VERIFY_SSL"
 
 if [ -z "$CONTROLLER_HOST" ]; then
@@ -44,6 +45,13 @@ tee playbook.yml << EOF
         job_template_var: "$JOB_TEMPLATE"
         workflow_template_var: "$WORKFLOW_TEMPLATE"
         project_var: "$PROJECT"
+        extra_vars: "$EXTRA_VARS"
+
+    - name: print out extra_vars
+      debug:
+        msg:
+          - "extra vars are {{ extra_vars }}"
+          - "extra vars are {{ extra_vars }}"
 
     - name: Launch a job template with extra_vars on remote controller instance
       when: job_template_var|length > 0
