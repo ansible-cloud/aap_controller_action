@@ -28,6 +28,6 @@ jobs:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
           controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
-          validate_certs: false
           job_template: "AWS - ec2 enforce owner tag"
-          extra_vars: "blah:3"
+          extra_vars: "us-west-1"
+          # validate_certs: false

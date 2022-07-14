@@ -3,6 +3,8 @@
 echo "AAP - Automation controller Github Action"
 
 echo "CONTROLLER_HOST is $CONTROLLER_HOST"
+echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
+echo "CONTROLLER_VERIFY_SSL is set to $CONTROLLER_VERIFY_SSL"
 
 if [ -z "$CONTROLLER_HOST" ]; then
   echo "Automation controller host is not set. Exiting."
@@ -19,7 +21,6 @@ if [ -z "$CONTROLLER_PASSWORD" ]; then
   exit 1
 fi
 
-echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
 
 
 tee ansible.cfg << EOF
@@ -38,13 +39,17 @@ tee playbook.yml << EOF
 
   tasks:
 
+    - name: grab github action input
+      set_fact:
+        job_template_var: "$JOB_TEMPLATE"
+        workflow_template_var: "$WORKFLOW_TEMPLATE"
+        project_var: "$PROJECT"
+
     - name: Launch a job template with extra_vars on remote controller instance
+      when: job_template_var|length > 0
       awx.awx.job_launch:
-        job_template: "$JOB_TEMPLATE"
-        extra_vars:
-          your_region: "us-east-1"
-          var2: "My Second Variable"
-          var3: "My Third Variable"
+        job_template: "{{ job_template_var }}"
+        extra_vars: "$EXTRA_VARS"
         validate_certs: "$CONTROLLER_VERIFY_SSL"
         controller_username: "$CONTROLLER_USERNAME"
         controller_password: "$CONTROLLER_PASSWORD"
@@ -52,6 +57,7 @@ tee playbook.yml << EOF
       register: job_output
 
     - name: Wait for job
+      when: job_template_var|length > 0 or workflow_template_var|length > 0
       awx.awx.job_wait:
         job_id: "{{ job_output.id }}"
         timeout: 1800
@@ -61,6 +67,7 @@ tee playbook.yml << EOF
         controller_host: "$CONTROLLER_HOST"
 
     - name: retrieve job info
+      when: job_template_var|length > 0 or workflow_template_var|length > 0
       uri:
         url: https://$CONTROLLER_HOST/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
         method: GET
@@ -70,7 +77,9 @@ tee playbook.yml << EOF
         force_basic_auth: yes
       register: playbook_output
 
-    - debug:
+    - name: display Automation controller job output
+      when: job_template_var|length > 0 or workflow_template_var|length > 0
+      debug:
         var: playbook_output.json.content
 EOF
 
@@ -79,9 +88,9 @@ echo "AAP Github Action - Executing Automation Job on Automation controller"
 /usr/local/bin/ansible-playbook playbook.yml
 
 if [ $? -eq 0 ]; then
-    echo "Ansible Job has executed successfully"
+    echo "Ansible Github Action Job has executed successfully"
 else
-    echo "Ansible Job has failed"
+    echo "Ansible Github Action Job has failed"
     exit 1
 fi
 
