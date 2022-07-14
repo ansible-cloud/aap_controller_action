@@ -22,7 +22,7 @@ jobs:
     name: Kick off Automation controller job
     steps:
       - name: Load the ansible-cloud action
-        id: controller
+        id: controller_job
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
@@ -36,7 +36,7 @@ jobs:
     name: Test provision workshop and teardown
     steps:
       - name: Load the ansible-cloud action for provision
-        id: controller
+        id: workshop_provision
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
@@ -46,7 +46,7 @@ jobs:
           extra_vars: "ec2_name_prefix=github-action-test-sean"
           validate_certs: false
       - name: Load the ansible-cloud action for teardown
-        id: controller
+        id: workshop_teardown
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
