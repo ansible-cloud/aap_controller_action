@@ -31,3 +31,31 @@ jobs:
           job_template: "AWS - ec2 enforce owner tag"
           extra_vars: "your_region=us-west-1"
           validate_certs: false
+  workshop_job_provision:
+    runs-on: ubuntu-latest
+    name: Kick off workshop controller job
+    steps:
+      - name: Load the ansible-cloud action
+        id: controller
+        uses: ansible-cloud/aap_controller_action@v1.2.7
+        with:
+          controller_host: ${{ secrets.CONTROLLER_HOST }}
+          controller_username: ${{ secrets.CONTROLLER_USERNAME }}
+          controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
+          job_template: "Workshop Provision Job"
+          extra_vars: "ec2_name_prefix=github-action-test-sean"
+          validate_certs: false
+  workshop_job_teardown:
+    runs-on: ubuntu-latest
+    name: Kick off workshop controller job
+    steps:
+      - name: Load the ansible-cloud action
+        id: controller
+        uses: ansible-cloud/aap_controller_action@v1.2.7
+        with:
+          controller_host: ${{ secrets.CONTROLLER_HOST }}
+          controller_username: ${{ secrets.CONTROLLER_USERNAME }}
+          controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
+          job_template: "Teardown Workshop"
+          extra_vars: "ec2_name_prefix=github-action-test-sean"
+          validate_certs: false
