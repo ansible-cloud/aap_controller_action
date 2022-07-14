@@ -33,9 +33,9 @@ jobs:
           validate_certs: false
   workshop_job_provision:
     runs-on: ubuntu-latest
-    name: Kick off workshop controller job
+    name: Test provision workshop and teardown
     steps:
-      - name: Load the ansible-cloud action
+      - name: Load the ansible-cloud action for provision
         id: controller
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
@@ -45,11 +45,7 @@ jobs:
           job_template: "Workshop Provision Job"
           extra_vars: "ec2_name_prefix=github-action-test-sean"
           validate_certs: false
-  workshop_job_teardown:
-    runs-on: ubuntu-latest
-    name: Kick off workshop controller job
-    steps:
-      - name: Load the ansible-cloud action
+      - name: Load the ansible-cloud action for teardown
         id: controller
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
