@@ -28,6 +28,7 @@ tee ansible.cfg << EOF
 [defaults]
 COLLECTIONS_PATHS = /root/.ansible/collections
 stdout_callback=community.general.yaml
+callbacks_enabled=ansible.posix.profile_tasks
 
 EOF
 
@@ -68,7 +69,7 @@ tee playbook.yml << EOF
       when: job_template_var|length > 0 or workflow_template_var|length > 0
       awx.awx.job_wait:
         job_id: "{{ job_output.id }}"
-        timeout: 1800
+        timeout: 3600
         validate_certs: "$CONTROLLER_VERIFY_SSL"
         controller_username: "$CONTROLLER_USERNAME"
         controller_password: "$CONTROLLER_PASSWORD"
