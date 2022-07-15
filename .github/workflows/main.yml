@@ -46,6 +46,7 @@ jobs:
           extra_vars: "ec2_name_prefix=github-action-test-seanjul15"
           validate_certs: false
       - name: Load the ansible-cloud action for teardown
+        if: always()
         id: workshop_teardown
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
