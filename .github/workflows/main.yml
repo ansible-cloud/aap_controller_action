@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test provision workshop and teardown
     steps:
-      - name: Load the ansible-cloud action for provision
+      - name: Load the ansible-cloud action to provision
         id: workshop_provision
         uses: ansible-cloud/aap_controller_action@v1.2.7
         with:
