@@ -22,7 +22,9 @@ if [ -z "$CONTROLLER_PASSWORD" ]; then
   exit 1
 fi
 
-
+echo "GITHUB_BASE_REF is $GITHUB_BASE_REF"
+echo "GITHUB_HEAD_REF is $GITHUB_HEAD_REF"
+echo "GITHUB_REF_NAME is $GITHUB_REF_NAME"
 
 tee ansible.cfg << EOF
 [defaults]
