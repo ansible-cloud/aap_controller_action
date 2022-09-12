@@ -8,6 +8,9 @@ inputs:
   controller_host:
     description: "Automation controller URL."
     required: true
+  controller_project:
+    description: "Automation controller project."
+    required: false
   controller_username:
     description: "Automation controller username."
     required: false
@@ -31,5 +34,6 @@ runs:
     CONTROLLER_USERNAME: ${{ inputs.controller_username }}
     CONTROLLER_PASSWORD: ${{ inputs.controller_password }}
     CONTROLLER_VERIFY_SSL: ${{ inputs.validate_certs }}
+    CONTROLLER_PROJECT: ${{ inputs.controller_project }}
     JOB_TEMPLATE: ${{ inputs.job_template }}
     EXTRA_VARS: ${{ inputs.extra_vars }}

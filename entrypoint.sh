@@ -6,6 +6,7 @@ echo "CONTROLLER_HOST is $CONTROLLER_HOST"
 echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
 echo "EXTRA_VARS is set to $EXTRA_VARS"
 echo "CONTROLLER_VERIFY_SSL is set to $CONTROLLER_VERIFY_SSL"
+echo "CONTROLLER_PROJECT is set to $CONTROLLER_PROJECT"
 
 if [ -z "$CONTROLLER_HOST" ]; then
   echo "Automation controller host is not set. Exiting."
@@ -47,7 +48,7 @@ tee playbook.yml << EOF
       set_fact:
         job_template_var: "$JOB_TEMPLATE"
         workflow_template_var: "$WORKFLOW_TEMPLATE"
-        project_var: "$PROJECT"
+        project_var: "$CONTROLLER_PROJECT"
         extra_vars: "$EXTRA_VARS"
 
     - name: print out extra_vars
