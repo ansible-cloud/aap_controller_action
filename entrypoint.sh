@@ -54,6 +54,12 @@ tee playbook.yml << EOF
           - "extra vars are {{ extra_vars }}"
           - "extra vars are {{ extra_vars }}"
 
+    - name: sync project update
+      awx.awx.project_update:
+        project: "{{ project_var }}"
+        wait: true
+      when: project_var|length > 0
+
     - name: Launch a job template with extra_vars on remote controller instance
       when: job_template_var|length > 0
       awx.awx.job_launch:
