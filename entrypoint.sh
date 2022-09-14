@@ -26,6 +26,13 @@ fi
 echo "GITHUB_BASE_REF is $GITHUB_BASE_REF"
 echo "GITHUB_HEAD_REF is $GITHUB_HEAD_REF"
 echo "GITHUB_REF_NAME is $GITHUB_REF_NAME"
+echo "GITHUB_EVENT_NAME is $GITHUB_EVENT_NAME"
+echo "GITHUB_JOB is $GITHUB_JOB"
+echo "GITHUB_REF is $GITHUB_REF"
+echo "GITHUB_REPOSITORY is $GITHUB_REPOSITORY"
+
+PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')echo echo "PR_NUMBER is $PR_NUMBER"
+echo "PR_ENV is $PR_ENV"
 
 tee ansible.cfg << EOF
 [defaults]
