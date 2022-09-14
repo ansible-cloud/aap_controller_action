@@ -31,8 +31,7 @@ echo "GITHUB_JOB is $GITHUB_JOB"
 echo "GITHUB_REF is $GITHUB_REF"
 echo "GITHUB_REPOSITORY is $GITHUB_REPOSITORY"
 
-PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')echo echo "PR_NUMBER is $PR_NUMBER"
-echo "PR_ENV is $PR_ENV"
+echo "pull_request_event is $pull_request_event"
 
 tee ansible.cfg << EOF
 [defaults]

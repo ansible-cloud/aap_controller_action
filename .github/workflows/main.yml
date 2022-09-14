@@ -1,6 +1,5 @@
 on:
   pull_request_target:
-  push:
   workflow_dispatch:
     inputs:
       validate_certs:
@@ -37,7 +36,7 @@ jobs:
           # controller_host: ${{ secrets.CONTROLLER_HOST }}
           # controller_username: ${{ secrets.CONTROLLER_USERNAME }}
           # controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
-          PR_ENV: ${{ github.event.number }}
+          pull_request_event: ${{ github.event.pull_request.number }}
   # workshop_job_provision:
   #   runs-on: ubuntu-latest
   #   name: Workshop Provision
