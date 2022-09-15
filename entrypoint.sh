@@ -2,12 +2,6 @@
 
 echo "AAP - Automation controller Github Action"
 
-echo "CONTROLLER_HOST is $CONTROLLER_HOST"
-echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
-echo "EXTRA_VARS is set to $EXTRA_VARS"
-echo "CONTROLLER_VERIFY_SSL is set to $CONTROLLER_VERIFY_SSL"
-echo "CONTROLLER_PROJECT is set to $CONTROLLER_PROJECT"
-
 if [ -z "$CONTROLLER_HOST" ]; then
   echo "Automation controller host is not set. Exiting."
   exit 1
@@ -23,6 +17,12 @@ if [ -z "$CONTROLLER_PASSWORD" ]; then
   exit 1
 fi
 
+echo "CONTROLLER_HOST is $CONTROLLER_HOST"
+echo "JOB_TEMPLATE being executed $JOB_TEMPLATE"
+echo "EXTRA_VARS is set to $EXTRA_VARS"
+echo "CONTROLLER_VERIFY_SSL is set to $CONTROLLER_VERIFY_SSL"
+echo "CONTROLLER_PROJECT is set to $CONTROLLER_PROJECT"
+echo "----------------"
 echo "GITHUB_BASE_REF is $GITHUB_BASE_REF"
 echo "GITHUB_HEAD_REF is $GITHUB_HEAD_REF"
 echo "GITHUB_REF_NAME is $GITHUB_REF_NAME"
@@ -30,8 +30,21 @@ echo "GITHUB_EVENT_NAME is $GITHUB_EVENT_NAME"
 echo "GITHUB_JOB is $GITHUB_JOB"
 echo "GITHUB_REF is $GITHUB_REF"
 echo "GITHUB_REPOSITORY is $GITHUB_REPOSITORY"
-
 echo "pull_request_event is $pull_request_event"
+echo "---------------"
+
+pull/1/head
+
+# scm_url e.g. https://github.com/ansible-cloud/aap_controller_action
+# scm_branch e.g. pull/1/head (for PR #1)
+# scm_refspec e.g. refs/pull/1/head:refs/remotes/origin/pull/1/head
+
+scm_branch="pull/$pull_request_event/head"
+echo "scm_branch is $scm_branch"
+
+scm_refspec="refs/pull/$pull_request_event/head:refs/remotes/origin/pull/$pull_request_event/head"
+
+
 
 tee ansible.cfg << EOF
 [defaults]

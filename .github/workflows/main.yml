@@ -33,9 +33,6 @@ jobs:
           extra_vars: "your_region=us-west-1"
           validate_certs: false
         env:
-          # controller_host: ${{ secrets.CONTROLLER_HOST }}
-          # controller_username: ${{ secrets.CONTROLLER_USERNAME }}
-          # controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
           pull_request_event: ${{ github.event.pull_request.number }}
   # workshop_job_provision:
   #   runs-on: ubuntu-latest
