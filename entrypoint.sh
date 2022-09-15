@@ -39,10 +39,14 @@ pull/1/head
 # scm_branch e.g. pull/1/head (for PR #1)
 # scm_refspec e.g. refs/pull/1/head:refs/remotes/origin/pull/1/head
 
+scm_url="https://github.com/$GITHUB_REPOSITORY"
+echo "scm_url is $scm_url"
+
 scm_branch="pull/$pull_request_event/head"
 echo "scm_branch is $scm_branch"
 
 scm_refspec="refs/pull/$pull_request_event/head:refs/remotes/origin/pull/$pull_request_event/head"
+echo "scm_refspec is $scm_refspec"
 
 
 
@@ -73,7 +77,6 @@ tee playbook.yml << EOF
     - name: print out extra_vars
       debug:
         msg:
-          - "extra vars are {{ extra_vars }}"
           - "extra vars are {{ extra_vars }}"
 
     - name: sync project update
