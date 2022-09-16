@@ -165,6 +165,26 @@ tee playbook.yml << EOF
       when: job_template_var|length > 0 or workflow_template_var|length > 0
       debug:
         var: playbook_output.json.content
+
+    - name: revert project settings back to original
+      awx.awx.project:
+        name: "{{ project_var }}"
+        state: present
+        description: "{{ project_info[0].description }}"
+        organization: "{{ project_info[0].organization }}"
+        default_environment: "{{ project_info[0].default_environment }}"
+        scm_type: "{{ project_info[0].scm_type }}"
+        scm_url: "{{ project_info[0].scm_url }}"
+        scm_branch: "{{ project_info[0].scm_branch }}"
+        scm_refspec: "{{ project_info[0].scm_refspec }}"
+        # credential: "{{ project_info[0].credential }}"
+        scm_clean: "{{ project_info[0].scm_clean }}"
+        scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
+        scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
+        scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
+        allow_override: "{{ project_info[0].allow_override }}"
+    when: project_var|length > 0
+
 EOF
 
 echo "AAP Github Action - Executing Automation Job on Automation controller"
