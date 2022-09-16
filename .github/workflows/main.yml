@@ -37,7 +37,11 @@ jobs:
           ANSIBLE_FORCE_COLOR: '1'
           pull_request_event: ${{ github.event.pull_request.number }}
       - name: Adding markdown
-        run: GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<job_output.txt)"
+        run: |
+          echo "### Ansible Automation Platform - Job Output :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY 
+          GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<job_output.txt)"
+          cat job_output.txt >> $GITHUB_STEP_SUMMARY
   # workshop_job_provision:
   #   runs-on: ubuntu-latest
   #   name: Workshop Provision
