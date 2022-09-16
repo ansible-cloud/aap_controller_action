@@ -36,8 +36,8 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           pull_request_event: ${{ github.event.pull_request.number }}
-      # - name: Adding markdown
-      #   run: echo '### Hello world! :rocket:' >> $GITHUB_STEP_SUMMARY
+      - name: Adding markdown
+        run: GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<read_file.txt)"
   # workshop_job_provision:
   #   runs-on: ubuntu-latest
   #   name: Workshop Provision
