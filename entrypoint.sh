@@ -204,9 +204,4 @@ else
     exit 1
 fi
 
-GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<read_file.txt)"
-
-echo "### Hello world! :rocket:" >> $GITHUB_STEP_SUMMARY
-
-
 echo "END OF AAP - Automation controller Github Action"
