@@ -73,16 +73,29 @@ tee playbook.yml << EOF
         workflow_template_var: "$WORKFLOW_TEMPLATE"
         project_var: "$CONTROLLER_PROJECT"
         extra_vars: "$EXTRA_VARS"
+        scm_url: "$scm_url"
+        scm_branch: "$scm_branch"
+        scm_refspec: "$scm_refspec"
 
     - name: print out extra_vars
       debug:
         msg:
           - "extra vars are {{ extra_vars }}"
 
-    - name: sync project update
-      awx.awx.project_update:
-        project: "{{ project_var }}"
-        wait: true
+    - name: project update and sync
+      block:
+      - name: update project
+        awx.awx.project:
+          name: "{{ project_var }}"
+          state: present
+          scm_url: "$scm_url"
+          scm_branch: "$scm_branch"
+          scm_refspec: "$scm_refspec"
+
+      - name: sync project update
+        awx.awx.project_update:
+          project: "{{ project_var }}"
+          wait: true
       when: project_var|length > 0
 
     - name: Launch a job template with extra_vars on remote controller instance
