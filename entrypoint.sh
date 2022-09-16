@@ -84,14 +84,44 @@ tee playbook.yml << EOF
 
     - name: project update and sync
       block:
-      - name: update project
+      - name: retrieve info on existing specified project in Automation controller
+        set_fact:
+          project_info: "{{ query('awx.awx.controller_api', 'projects', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': 'test project' }) }}"
+
+      - name: print out existing project settings to terminal
+        debug:
+          msg:
+            - description: "{{ project_info[0].description }}"
+            - organization: "{{ project_info[0].organization }}"
+            - default_environment: "{{ project_info[0].default_environment }}"
+            - scm_type: "{{ project_info[0].scm_type }}"
+            - scm_url: "{{ project_info[0].scm_url }}"
+            - scm_branch: "{{ project_info[0].scm_branch }}"
+            - scm_refspec: "{{ project_info[0].scm_refspec }}"
+            - credential: "{{ project_info[0].credential }}"
+            - scm_clean: "{{ project_info[0].scm_clean }}"
+            - scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
+            - scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
+            - scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
+            - allow_override: "{{ project_info[0].allow_override }}"
+
+      - name: update project to point at pull request
         awx.awx.project:
           name: "{{ project_var }}"
           state: present
-          scm_type: git
+          description: "{{ project_info[0].description }}"
+          organization: "{{ project_info[0].organization }}"
+          default_environment: "{{ project_info[0].default_environment }}"
+          scm_type: "{{ project_info[0].scm_type }}"
           scm_url: "$scm_url"
           scm_branch: "$scm_branch"
           scm_refspec: "$scm_refspec"
+          credential: "{{ project_info[0].credential }}"
+          scm_clean: "{{ project_info[0].scm_clean }}"
+          scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
+          scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
+          scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
+          allow_override: "{{ project_info[0].allow_override }}"
 
       - name: sync project update
         awx.awx.project_update:

@@ -23,13 +23,13 @@ jobs:
     steps:
       - name: Load the ansible-cloud action
         id: controller_job
-        uses: ansible-cloud/aap_controller_action@v1.2.15
+        uses: ansible-cloud/aap_controller_action@v1.2.16
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
           controller_password: ${{ secrets.CONTROLLER_PASSWORD }}
           job_template: "AWS - ec2 enforce owner tag"
-          controller_project: "aws ec2 operational project"
+          controller_project: "test project"
           extra_vars: "your_region=us-west-1"
           validate_certs: false
         env:
