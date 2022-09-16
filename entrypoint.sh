@@ -88,6 +88,7 @@ tee playbook.yml << EOF
         awx.awx.project:
           name: "{{ project_var }}"
           state: present
+          scm_type: git
           scm_url: "$scm_url"
           scm_branch: "$scm_branch"
           scm_refspec: "$scm_refspec"
