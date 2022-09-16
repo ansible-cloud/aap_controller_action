@@ -1,4 +1,9 @@
 #! /usr/bin/bash
+# PY_COLORS: '1'
+# ANSIBLE_FORCE_COLOR: '1'
+
+export PY_COLORS=1
+export ANSIBLE_FORCE_COLOR=1
 
 echo "AAP - Automation controller Github Action"
 
