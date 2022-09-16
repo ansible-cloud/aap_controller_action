@@ -39,7 +39,7 @@ jobs:
           echo "### Ansible Automation Platform - Job Output :rocket:" >> $GITHUB_STEP_SUMMARY
           echo ""  >> $GITHUB_STEP_SUMMARY
           job_output="cat job_output.txt"
-          echo -e "```\n$job_output\n```" >> $GITHUB_STEP_SUMMARY
+          echo -e "$job_output" >> $GITHUB_STEP_SUMMARY
           echo "End of Automation controller output" >> $GITHUB_STEP_SUMMARY
 
   # GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<job_output.txt)"
