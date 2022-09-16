@@ -116,7 +116,7 @@ tee playbook.yml << EOF
           scm_url: "$scm_url"
           scm_branch: "$scm_branch"
           scm_refspec: "$scm_refspec"
-          credential: "{{ project_info[0].credential }}"
+          # credential: "{{ project_info[0].credential }}"
           scm_clean: "{{ project_info[0].scm_clean }}"
           scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
           scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
