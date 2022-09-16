@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Load the ansible-cloud action
         id: controller_job
-        uses: ansible-cloud/aap_controller_action@v1.2.18
+        uses: ansible-cloud/aap_controller_action@v1.2.19
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
@@ -33,6 +33,8 @@ jobs:
           extra_vars: "your_region=us-west-1"
           validate_certs: false
         env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
           pull_request_event: ${{ github.event.pull_request.number }}
   # workshop_job_provision:
   #   runs-on: ubuntu-latest

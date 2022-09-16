@@ -183,7 +183,7 @@ tee playbook.yml << EOF
         scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
         scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
         allow_override: "{{ project_info[0].allow_override }}"
-    when: project_var|length > 0
+      when: project_var|length > 0
 
 EOF
 
