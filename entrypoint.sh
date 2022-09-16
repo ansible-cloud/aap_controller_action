@@ -166,6 +166,12 @@ tee playbook.yml << EOF
       debug:
         var: playbook_output.json.content
 
+    - name: copy playbook output from Automation controller to file
+      when: job_template_var|length > 0 or workflow_template_var|length > 0
+      ansible.builtin.copy:
+        content: "{{ playbook_output.json.content }}"
+        dest: job_output.txt
+
     - name: revert project settings back to original
       awx.awx.project:
         name: "{{ project_var }}"
@@ -197,5 +203,8 @@ else
     echo "Ansible Github Action Job has failed"
     exit 1
 fi
+
+GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<read_file.txt)"
+
 
 echo "END OF AAP - Automation controller Github Action"
