@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Load the ansible-cloud action
         id: controller_job
-        uses: ansible-cloud/aap_controller_action@v1.2.19
+        uses: ansible-cloud/aap_controller_action@v1.2.20
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
@@ -37,7 +37,7 @@ jobs:
           ANSIBLE_FORCE_COLOR: '1'
           pull_request_event: ${{ github.event.pull_request.number }}
       - name: Adding markdown
-        run: echo '### Hello world! :rocket:' >> $GITHUB_STEP_SUMMARY          
+        run: echo '### Hello world! :rocket:' >> $GITHUB_STEP_SUMMARY
   # workshop_job_provision:
   #   runs-on: ubuntu-latest
   #   name: Workshop Provision
