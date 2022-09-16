@@ -38,7 +38,12 @@ jobs:
         run: |
           echo "### Ansible Automation Platform - Job Output :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<job_output.txt)"
+          job_output=`cat job_output.txt`
+          echo "$job_output" >> $GITHUB_STEP_SUMMARY
+
+  # GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY \n $(<job_output.txt)"
+
+
   # workshop_job_provision:
   #   runs-on: ubuntu-latest
   #   name: Workshop Provision
