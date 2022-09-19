@@ -50,8 +50,8 @@ echo "scm_url is $scm_url"
 scm_branch="pull/$pull_request_event/head"
 echo "scm_branch is $scm_branch"
 
-# scm_refspec="refs/pull/$pull_request_event/head:refs/remotes/origin/pull/$pull_request_event/head"
-# echo "scm_refspec is $scm_refspec"
+scm_refspec="refs/pull/$pull_request_event/head:refs/remotes/origin/pull/$pull_request_event/head"
+echo "scm_refspec is $scm_refspec"
 
 
 
@@ -102,7 +102,7 @@ tee playbook.yml << EOF
             - scm_type: "{{ project_info[0].scm_type }}"
             - scm_url: "{{ project_info[0].scm_url }}"
             - scm_branch: "{{ project_info[0].scm_branch }}"
-            - scm_refspec: "refs/pull/*/head:refs/remotes/origin/pull/*"
+            - scm_refspec: "{{ project_info[0].scm_refspec }}"
             - credential: "{{ project_info[0].credential }}"
             - scm_clean: "{{ project_info[0].scm_clean }}"
             - scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
@@ -119,19 +119,18 @@ tee playbook.yml << EOF
           default_environment: "{{ project_info[0].default_environment }}"
           scm_type: "{{ project_info[0].scm_type }}"
           scm_url: "$scm_url"
-          scm_branch: "{{ project_info[0].scm_branch }}"
+          scm_branch: "$scm_branch"
           scm_refspec: "$scm_refspec"
           # credential: "{{ project_info[0].credential }}"
           scm_clean: "{{ project_info[0].scm_clean }}"
           scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
           scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
           scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
-          allow_override: True
+          allow_override: "{{ project_info[0].allow_override }}"
 
       - name: sync project update
         awx.awx.project_update:
           project: "{{ project_var }}"
-          validate_certs: "$CONTROLLER_VERIFY_SSL"
           wait: true
       when: project_var|length > 0
 
@@ -141,7 +140,9 @@ tee playbook.yml << EOF
         job_template: "{{ job_template_var }}"
         extra_vars: "$EXTRA_VARS"
         validate_certs: "$CONTROLLER_VERIFY_SSL"
-        scm_branch: "{{ scm_branch }}"
+        controller_username: "$CONTROLLER_USERNAME"
+        controller_password: "$CONTROLLER_PASSWORD"
+        controller_host: "$CONTROLLER_HOST"
       register: job_output
 
     - name: Wait for job
@@ -150,6 +151,9 @@ tee playbook.yml << EOF
         job_id: "{{ job_output.id }}"
         timeout: 3600
         validate_certs: "$CONTROLLER_VERIFY_SSL"
+        controller_username: "$CONTROLLER_USERNAME"
+        controller_password: "$CONTROLLER_PASSWORD"
+        controller_host: "$CONTROLLER_HOST"
 
     - name: retrieve job info
       when: job_template_var|length > 0 or workflow_template_var|length > 0
@@ -173,24 +177,24 @@ tee playbook.yml << EOF
         content: "{{ playbook_output.json.content }}"
         dest: job_output.txt
 
-    # - name: revert project settings back to original
-    #   awx.awx.project:
-    #     name: "{{ project_var }}"
-    #     state: present
-    #     description: "{{ project_info[0].description }}"
-    #     organization: "{{ project_info[0].organization }}"
-    #     default_environment: "{{ project_info[0].default_environment }}"
-    #     scm_type: "{{ project_info[0].scm_type }}"
-    #     scm_url: "{{ project_info[0].scm_url }}"
-    #     scm_branch: "{{ project_info[0].scm_branch }}"
-    #     scm_refspec: "{{ project_info[0].scm_refspec }}"
-    #     # credential: "{{ project_info[0].credential }}"
-    #     scm_clean: "{{ project_info[0].scm_clean }}"
-    #     scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
-    #     scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
-    #     scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
-    #     allow_override: "{{ project_info[0].allow_override }}"
-    #   when: project_var|length > 0
+    - name: revert project settings back to original
+      awx.awx.project:
+        name: "{{ project_var }}"
+        state: present
+        description: "{{ project_info[0].description }}"
+        organization: "{{ project_info[0].organization }}"
+        default_environment: "{{ project_info[0].default_environment }}"
+        scm_type: "{{ project_info[0].scm_type }}"
+        scm_url: "{{ project_info[0].scm_url }}"
+        scm_branch: "{{ project_info[0].scm_branch }}"
+        scm_refspec: "{{ project_info[0].scm_refspec }}"
+        # credential: "{{ project_info[0].credential }}"
+        scm_clean: "{{ project_info[0].scm_clean }}"
+        scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
+        scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
+        scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
+        allow_override: "{{ project_info[0].allow_override }}"
+      when: project_var|length > 0
 
 EOF
 

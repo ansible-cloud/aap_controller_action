@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: print host vars for localhost
+      debug:
+        var: hostvars["{{ ansible_host }}"]
