@@ -81,7 +81,7 @@ tee playbook.yml << EOF
         scm_url: "$scm_url"
         scm_branch: "$scm_branch"
         # scm_refspec: "$scm_refspec"
-        scm_refspec: "refs/pull/*/head:refs/remotes/origin/pull/*"
+        scm_refspec: "refs/pull/*:refs/remotes/origin/pull/*"
 
     - name: print out extra_vars
       debug:
