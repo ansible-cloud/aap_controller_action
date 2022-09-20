@@ -92,7 +92,7 @@ tee playbook.yml << EOF
           template_info: "{{ query('awx.awx.controller_api', 'job_templates', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$JOB_TEMPLATE' }) }}"
           scm_url: "$scm_url"
           scm_branch: "$scm_branch"
-          scm_refspec: "$scm_refspec"
+          scm_refspec: "refs/pull/*/head:refs/remotes/origin/pull/*"
 
       - name: print out existing project settings to terminal
         debug:
@@ -103,7 +103,7 @@ tee playbook.yml << EOF
             - scm_type: "{{ project_info[0].scm_type }}"
             - scm_url: "{{ project_info[0].scm_url }}"
             - scm_branch: "{{ project_info[0].scm_branch }}"
-            - scm_refspec: "refs/pull/*/head:refs/remotes/origin/pull/*"
+            - scm_refspec: "{{ project_info[0].scm_refspec }}"
             - credential: "{{ project_info[0].credential }}"
             - scm_clean: "{{ project_info[0].scm_clean }}"
             - scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
@@ -171,7 +171,7 @@ tee playbook.yml << EOF
           scm_type: "{{ project_info[0].scm_type }}"
           scm_url: "$scm_url"
           scm_branch: "{{ project_info[0].scm_branch }}"
-          scm_refspec: "$scm_refspec"
+          scm_refspec: "{{ scm_refspec }}"
           # credential: "{{ project_info[0].credential }}"
           scm_clean: "{{ project_info[0].scm_clean }}"
           scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
