@@ -77,6 +77,7 @@ tee playbook.yml << EOF
         job_template_var: "$JOB_TEMPLATE"
         workflow_template_var: "$WORKFLOW_TEMPLATE"
         extra_vars: "$EXTRA_VARS"
+        project_var: "$CONTROLLER_PROJECT"
 
     - name: print out extra_vars
       debug:
@@ -92,7 +93,6 @@ tee playbook.yml << EOF
           scm_url: "$scm_url"
           scm_branch: "$scm_branch"
           scm_refspec: "$scm_refspec"
-          project_var: "$CONTROLLER_PROJECT"
 
       - name: print out existing project settings to terminal
         debug:
