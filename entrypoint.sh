@@ -50,7 +50,7 @@ echo "scm_url is $scm_url"
 scm_branch="pull/$pull_request_event/head"
 echo "scm_branch is $scm_branch"
 
-# scm_refspec="refs/pull/$pull_request_event/head:refs/remotes/origin/pull/$pull_request_event/head"
+# scm_refspec="refs/pull/*:refs/remotes/origin/pull/*"
 # echo "scm_refspec is $scm_refspec"
 
 
@@ -92,7 +92,7 @@ tee playbook.yml << EOF
           template_info: "{{ query('awx.awx.controller_api', 'job_templates', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$JOB_TEMPLATE' }) }}"
           scm_url: "$scm_url"
           scm_branch: "$scm_branch"
-          scm_refspec: "refs/pull/*/head:refs/remotes/origin/pull/*"
+          scm_refspec: "refs/pull/*:refs/remotes/origin/pull/*"
 
       - name: print out existing project settings to terminal
         debug:
