@@ -155,9 +155,13 @@ tee playbook.yml << EOF
 
       - name: figure out creds for JT
         set_fact:
-          credentials: "{% for cred in template_info[0].summary_fields['credentials'] %}{{ cred.name }}{% if loop.length > 1 %},{% endif %}{% endfor %}"
+          credentials: "{% if template_info[0].summary_fields['credentials'] | length>0 %}{% for cred in template_info[0].summary_fields['credentials'] %}{{ cred.name }}{% if loop.length > 1 %},{% endif %}{% endfor %}{% endif %}"
 
-      - name: update project to allow scm allow_override and scm_update_on_launch
+      - name: figure out creds for JT
+        set_fact:
+          credentials: "{% if credentials | length>0 %}{{ credentials | split(',') }}{% endif %}"
+
+      - name: update project for scm allow_override and scm_update_on_launch
         awx.awx.project:
           name: "{{ project_var }}"
           state: present
@@ -191,7 +195,7 @@ tee playbook.yml << EOF
           ask_variables_on_launch: "{{ template_info[0].ask_variables_on_launch }}"
           ask_verbosity_on_launch: "{{ template_info[0].ask_verbosity_on_launch }}"
           become_enabled: "{{ template_info[0].become_enabled }}"
-          credentials: "{{ credentials | split(',') }}"
+          credentials: "{{ credentials | default(omit, true) }}"
           description: "{{ template_info[0].description }}"
           diff_mode: "{{ template_info[0].diff_mode }}"
           execution_environment: "{{ template_info[0].execution_environment }}"

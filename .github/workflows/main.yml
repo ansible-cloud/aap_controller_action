@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Load the ansible-cloud action
         id: controller_job
-        uses: ansible-cloud/aap_controller_action@v2.1.2
+        uses: ansible-cloud/aap_controller_action@v2.1.3
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
