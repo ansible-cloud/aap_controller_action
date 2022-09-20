@@ -126,7 +126,7 @@ tee playbook.yml << EOF
             - ask_variables_on_launch: "{{ template_info[0].ask_variables_on_launch }}"
             - ask_verbosity_on_launch: "{{ template_info[0].ask_verbosity_on_launch }}"
             - become_enabled: "{{ template_info[0].become_enabled }}"
-            - credentials: "{{ credentials | split(',') }}"
+            - credentials: "{{ credentials | default(omit, true) }}"
             - description: "{{ template_info[0].description }}"
             - diff_mode: "{{ template_info[0].diff_mode }}"
             - execution_environment: "{{ template_info[0].execution_environment }}"
