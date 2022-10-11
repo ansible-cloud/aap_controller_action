@@ -21,8 +21,11 @@ inputs:
     required: false
     default: "true"
   job_template:
-    description: "Name or ID of project, job_template or workflow_job_template."
-    required: true
+    description: "Name or ID of job_template"
+    required: false
+  workflow_template:
+    description: "Name or ID of workflow_template"
+    required: false
   extra_vars:
     description: "Pass extra command line variables to the playbook."
     required: false
@@ -36,4 +39,5 @@ runs:
     CONTROLLER_VERIFY_SSL: ${{ inputs.validate_certs }}
     CONTROLLER_PROJECT: ${{ inputs.controller_project }}
     JOB_TEMPLATE: ${{ inputs.job_template }}
+    WORKFLOW_TEMPLATE: ${{ inputs.job_template }}
     EXTRA_VARS: ${{ inputs.extra_vars }}

@@ -37,8 +37,8 @@ echo "GITHUB_REF is $GITHUB_REF"
 echo "GITHUB_REPOSITORY is $GITHUB_REPOSITORY"
 echo "pull_request_event is $pull_request_event"
 echo "---------------"
-
-pull/1/head
+echo "WORKFLOW_TEMPLATE is $WORKFLOW_TEMPLATE"
+echo "---------------"
 
 # scm_url e.g. https://github.com/ansible-cloud/aap_controller_action
 # scm_branch e.g. pull/1/head (for PR #1)
@@ -66,7 +66,7 @@ EOF
 
 tee playbook.yml << EOF
 ---
-- name: execute autmation job
+- name: execute automation job
   hosts: localhost
   gather_facts: no
 
@@ -85,6 +85,7 @@ tee playbook.yml << EOF
           - "extra vars are {{ extra_vars }}"
 
     - name: project update and sync
+      when: workflow_template_var|length == 0
       block:
       - name: retrieve info on existing specified project in Automation controller
         set_fact:
@@ -225,43 +226,62 @@ tee playbook.yml << EOF
 
       when: project_var|length > 0
 
-    - name: Launch a job template with extra_vars on remote controller instance when project is set
-      when: job_template_var|length > 0
-      awx.awx.job_launch:
-        job_template: "{{ job_template_var }}"
-        extra_vars: "$EXTRA_VARS"
-        validate_certs: "$CONTROLLER_VERIFY_SSL"
-        scm_branch: "{{ scm_branch |  default(omit, true) }}"
-      register: job_output
+    - name: launch a job and wait for the job
+      when: job_template_var | length > 0
+      block:
+        - name: Launch a job template with extra_vars on remote controller instance when project is set
+          awx.awx.job_launch:
+            job_template: "{{ job_template_var }}"
+            extra_vars: "{{ extra_vars |  default(omit, true) }}"
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
+            scm_branch: "{{ scm_branch |  default(omit, true) }}"
+          register: job_output
 
-    - name: Wait for job
-      when: job_template_var|length > 0 or workflow_template_var|length > 0
-      awx.awx.job_wait:
-        job_id: "{{ job_output.id }}"
-        timeout: 3600
-        validate_certs: "$CONTROLLER_VERIFY_SSL"
+        - name: Wait for job
+          awx.awx.job_wait:
+            job_id: "{{ job_output.id }}"
+            timeout: 3600
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
 
-    - name: retrieve job info
-      when: job_template_var|length > 0 or workflow_template_var|length > 0
-      uri:
-        url: https://$CONTROLLER_HOST/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
-        method: GET
-        user: "$CONTROLLER_USERNAME"
-        password: "$CONTROLLER_PASSWORD"
-        validate_certs: "$CONTROLLER_VERIFY_SSL"
-        force_basic_auth: yes
-      register: playbook_output
+        - name: retrieve job info
+          when: job_template_var|length > 0
+          uri:
+            url: https://$CONTROLLER_HOST/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
+            method: GET
+            user: "$CONTROLLER_USERNAME"
+            password: "$CONTROLLER_PASSWORD"
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
+            force_basic_auth: yes
+          register: playbook_output
 
-    - name: display Automation controller job output
-      when: job_template_var|length > 0 or workflow_template_var|length > 0
-      debug:
-        var: playbook_output.json.content
+        - name: display Automation controller job output
+          when: job_template_var|length > 0 or workflow_template_var|length > 0
+          debug:
+            var: playbook_output.json.content
 
-    - name: copy playbook output from Automation controller to file
-      when: job_template_var|length > 0 or workflow_template_var|length > 0
-      ansible.builtin.copy:
-        content: "{{ playbook_output.json.content }}"
-        dest: job_output.txt
+        - name: copy playbook output from Automation controller to file
+          when: job_template_var|length > 0 or workflow_template_var|length > 0
+          ansible.builtin.copy:
+            content: "{{ playbook_output.json.content }}"
+            dest: job_output.txt
+
+    - name: launch a workflow and wait for the workflow to finish
+      when: workflow_template_var | length > 0
+      block:
+        - name: Launch a job template with extra_vars on remote controller instance when project is set
+          awx.awx.workflow_launch:
+            workflow_template: "{{ job_template_var }}"
+            extra_vars: "{{ extra_vars |  default(omit, true) }}"
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
+            scm_branch: "{{ scm_branch |  default(omit, true) }}"
+          register: job_output
+
+        - name: Wait for workflow
+          awx.awx.job_wait:
+            job_id: "{{ job_output.id }}"
+            job_type: workflow_jobs
+            timeout: 3600
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
 
 EOF
 
