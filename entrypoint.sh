@@ -158,7 +158,6 @@ tee playbook.yml << EOF
               - verbosity: "{{ template_info[0].verbosity }}"
               - wobhook_credential: "{{ template_info[0].webhook_credential | default(omit, true) }}"
               - webhook_service: "{{ template_info[0].webhook_service }}"
-      when: workflow_template_var|length == 0
 
       - name: figure out creds for JT
         set_fact:
