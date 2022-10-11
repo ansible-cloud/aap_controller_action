@@ -255,12 +255,10 @@ tee playbook.yml << EOF
           register: playbook_output
 
         - name: display Automation controller job output
-          when: job_template_var|length > 0 or workflow_template_var|length > 0
           debug:
             var: playbook_output.json.content
 
         - name: copy playbook output from Automation controller to file
-          when: job_template_var|length > 0 or workflow_template_var|length > 0
           ansible.builtin.copy:
             content: "{{ playbook_output.json.content }}"
             dest: job_output.txt
