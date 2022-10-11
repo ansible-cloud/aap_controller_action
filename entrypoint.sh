@@ -84,75 +84,81 @@ tee playbook.yml << EOF
         msg:
           - "extra vars are {{ extra_vars }}"
 
+    - name: print out workflow_template_var length
+      debug:
+        msg:
+          - "workflow_template_var | length is {{ workflow_template_var | length }}"
+
     - name: project update and sync
       when: workflow_template_var|length == 0
       block:
-      - name: retrieve info on existing specified project in Automation controller
-        set_fact:
-          project_info: "{{ query('awx.awx.controller_api', 'projects', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$CONTROLLER_PROJECT' }) }}"
-          template_info: "{{ query('awx.awx.controller_api', 'job_templates', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$JOB_TEMPLATE' }) }}"
-          scm_url: "$scm_url"
-          scm_branch: "$scm_branch"
-          scm_refspec: "refs/pull/*:refs/remotes/origin/pull/*"
+        - name: retrieve info on existing specified project in Automation controller
+          set_fact:
+            project_info: "{{ query('awx.awx.controller_api', 'projects', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$CONTROLLER_PROJECT' }) }}"
+            template_info: "{{ query('awx.awx.controller_api', 'job_templates', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$JOB_TEMPLATE' }) }}"
+            scm_url: "$scm_url"
+            scm_branch: "$scm_branch"
+            scm_refspec: "refs/pull/*:refs/remotes/origin/pull/*"
 
-      - name: print out existing project settings to terminal
-        debug:
-          msg:
-            - description: "{{ project_info[0].description }}"
-            - organization: "{{ project_info[0].organization }}"
-            - default_environment: "{{ project_info[0].default_environment }}"
-            - scm_type: "{{ project_info[0].scm_type }}"
-            - scm_url: "{{ project_info[0].scm_url }}"
-            - scm_branch: "{{ project_info[0].scm_branch }}"
-            - scm_refspec: "{{ project_info[0].scm_refspec }}"
-            - credential: "{{ project_info[0].credential }}"
-            - scm_clean: "{{ project_info[0].scm_clean }}"
-            - scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
-            - scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
-            - scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
-            - allow_override: "{{ project_info[0].allow_override }}"
+        - name: print out existing project settings to terminal
+          debug:
+            msg:
+              - description: "{{ project_info[0].description }}"
+              - organization: "{{ project_info[0].organization }}"
+              - default_environment: "{{ project_info[0].default_environment }}"
+              - scm_type: "{{ project_info[0].scm_type }}"
+              - scm_url: "{{ project_info[0].scm_url }}"
+              - scm_branch: "{{ project_info[0].scm_branch }}"
+              - scm_refspec: "{{ project_info[0].scm_refspec }}"
+              - credential: "{{ project_info[0].credential }}"
+              - scm_clean: "{{ project_info[0].scm_clean }}"
+              - scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
+              - scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
+              - scm_update_on_launch: "{{ project_info[0].scm_update_on_launch }}"
+              - allow_override: "{{ project_info[0].allow_override }}"
 
-      - name: print out existing job template settings to terminal
-        debug:
-          msg:
-            - allow_simultaneous: "{{ template_info[0].allow_simultaneous }}"
-            - ask_credential_on_launch: "{{ template_info[0].ask_credential_on_launch }}"
-            - ask_diff_mode_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
-            - ask_inventory_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
-            - ask_job_type_on_launch: "{{ template_info[0].ask_job_type_on_launch }}"
-            - ask_limit_on_launch: "{{ template_info[0].ask_limit_on_launch }}"
-            - ask_scm_branch_on_launch: "{{ template_info[0].ask_scm_branch_on_launch }}"
-            - ask_skip_tags_on_launch: "{{ template_info[0].ask_skip_tags_on_launch }}"
-            - ask_tags_on_launch: "{{ template_info[0].ask_tags_on_launch }}"
-            - ask_variables_on_launch: "{{ template_info[0].ask_variables_on_launch }}"
-            - ask_verbosity_on_launch: "{{ template_info[0].ask_verbosity_on_launch }}"
-            - become_enabled: "{{ template_info[0].become_enabled }}"
-            - credentials: "{{ credentials | default(omit, true) }}"
-            - description: "{{ template_info[0].description }}"
-            - diff_mode: "{{ template_info[0].diff_mode }}"
-            - execution_environment: "{{ template_info[0].execution_environment }}"
-            - extra_vars: "{% if not template_info[0].extra_vars | from_yaml %}{}{% else %}blah{% endif %}"
-            - force_handlers: "{{ template_info[0].force_handlers }}"
-            - forks: "{{ template_info[0].forks }}"
-            - host_config_key: "{{ template_info[0].host_config_key }}"
-            - inventory: "{{ template_info[0].inventory }}"
-            - job_slice_count: "{{ template_info[0].job_slice_count }}"
-            - job_tags: "{{ template_info[0].job_tags }}"
-            - job_type: "{{ template_info[0].job_type }}"
-            - limit: "{{ template_info[0].limit }}"
-            - name: "{{ template_info[0].name }}"
-            - organization: "{{ template_info[0].organization }}"
-            - playbook: "{{ template_info[0].playbook }}"
-            - project: "{{ template_info[0].project }}"
-            - scm_branch: "{{ template_info[0].scm_branch }}"
-            - skip_tags: "{{ template_info[0].skip_tags }}"
-            - start_at_task: "{{ template_info[0].start_at_task }}"
-            - survey_enabled: "{{ template_info[0].survey_enabled }}"
-            - timeout: "{{ template_info[0].timeout }}"
-            - use_fact_cache: "{{ template_info[0].use_fact_cache }}"
-            - verbosity: "{{ template_info[0].verbosity }}"
-            - wobhook_credential: "{{ template_info[0].webhook_credential | default(omit, true) }}"
-            - webhook_service: "{{ template_info[0].webhook_service }}"
+        - name: print out existing job template settings to terminal
+          debug:
+            msg:
+              - allow_simultaneous: "{{ template_info[0].allow_simultaneous }}"
+              - ask_credential_on_launch: "{{ template_info[0].ask_credential_on_launch }}"
+              - ask_diff_mode_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
+              - ask_inventory_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
+              - ask_job_type_on_launch: "{{ template_info[0].ask_job_type_on_launch }}"
+              - ask_limit_on_launch: "{{ template_info[0].ask_limit_on_launch }}"
+              - ask_scm_branch_on_launch: "{{ template_info[0].ask_scm_branch_on_launch }}"
+              - ask_skip_tags_on_launch: "{{ template_info[0].ask_skip_tags_on_launch }}"
+              - ask_tags_on_launch: "{{ template_info[0].ask_tags_on_launch }}"
+              - ask_variables_on_launch: "{{ template_info[0].ask_variables_on_launch }}"
+              - ask_verbosity_on_launch: "{{ template_info[0].ask_verbosity_on_launch }}"
+              - become_enabled: "{{ template_info[0].become_enabled }}"
+              - credentials: "{{ credentials | default(omit, true) }}"
+              - description: "{{ template_info[0].description }}"
+              - diff_mode: "{{ template_info[0].diff_mode }}"
+              - execution_environment: "{{ template_info[0].execution_environment }}"
+              - extra_vars: "{% if not template_info[0].extra_vars | from_yaml %}{}{% else %}blah{% endif %}"
+              - force_handlers: "{{ template_info[0].force_handlers }}"
+              - forks: "{{ template_info[0].forks }}"
+              - host_config_key: "{{ template_info[0].host_config_key }}"
+              - inventory: "{{ template_info[0].inventory }}"
+              - job_slice_count: "{{ template_info[0].job_slice_count }}"
+              - job_tags: "{{ template_info[0].job_tags }}"
+              - job_type: "{{ template_info[0].job_type }}"
+              - limit: "{{ template_info[0].limit }}"
+              - name: "{{ template_info[0].name }}"
+              - organization: "{{ template_info[0].organization }}"
+              - playbook: "{{ template_info[0].playbook }}"
+              - project: "{{ template_info[0].project }}"
+              - scm_branch: "{{ template_info[0].scm_branch }}"
+              - skip_tags: "{{ template_info[0].skip_tags }}"
+              - start_at_task: "{{ template_info[0].start_at_task }}"
+              - survey_enabled: "{{ template_info[0].survey_enabled }}"
+              - timeout: "{{ template_info[0].timeout }}"
+              - use_fact_cache: "{{ template_info[0].use_fact_cache }}"
+              - verbosity: "{{ template_info[0].verbosity }}"
+              - wobhook_credential: "{{ template_info[0].webhook_credential | default(omit, true) }}"
+              - webhook_service: "{{ template_info[0].webhook_service }}"
+      when: workflow_template_var|length == 0
 
       - name: figure out creds for JT
         set_fact:
