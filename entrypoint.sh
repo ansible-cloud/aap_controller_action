@@ -159,77 +159,77 @@ tee playbook.yml << EOF
               - wobhook_credential: "{{ template_info[0].webhook_credential | default(omit, true) }}"
               - webhook_service: "{{ template_info[0].webhook_service }}"
 
-      - name: figure out creds for JT
-        set_fact:
-          credentials: "{% if template_info[0].summary_fields['credentials'] | length>0 %}{% for cred in template_info[0].summary_fields['credentials'] %}{{ cred.name }}{% if loop.length > 1 %},{% endif %}{% endfor %}{% endif %}"
+        - name: figure out creds for JT
+          set_fact:
+            credentials: "{% if template_info[0].summary_fields['credentials'] | length>0 %}{% for cred in template_info[0].summary_fields['credentials'] %}{{ cred.name }}{% if loop.length > 1 %},{% endif %}{% endfor %}{% endif %}"
+    
+        - name: figure out creds for JT
+          set_fact:
+            credentials: "{% if credentials | length>0 %}{{ credentials | split(',') }}{% endif %}"
+    
+        - name: update project for scm allow_override and scm_update_on_launch
+          awx.awx.project:
+            name: "{{ project_var }}"
+            state: present
+            description: "{{ project_info[0].description }}"
+            organization: "{{ project_info[0].organization }}"
+            default_environment: "{{ project_info[0].default_environment }}"
+            scm_type: "{{ project_info[0].scm_type }}"
+            scm_url: "$scm_url"
+            scm_branch: "{{ project_info[0].scm_branch }}"
+            scm_refspec: "{{ scm_refspec }}"
+            # credential: "{{ project_info[0].credential }}"
+            scm_clean: "{{ project_info[0].scm_clean }}"
+            scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
+            scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
+            scm_update_on_launch: True
+            allow_override: True
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
+    
+        # This task is only updating ask_scm_branch_on_launch
+        - name: update job template to turn ask_scm_branch_on_launch
+          awx.awx.job_template:
+            allow_simultaneous: "{{ template_info[0].allow_simultaneous }}"
+            ask_credential_on_launch: "{{ template_info[0].ask_credential_on_launch }}"
+            ask_diff_mode_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
+            ask_inventory_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
+            ask_job_type_on_launch: "{{ template_info[0].ask_job_type_on_launch }}"
+            ask_limit_on_launch: "{{ template_info[0].ask_limit_on_launch }}"
+            ask_scm_branch_on_launch: True
+            ask_skip_tags_on_launch: "{{ template_info[0].ask_skip_tags_on_launch }}"
+            ask_tags_on_launch: "{{ template_info[0].ask_tags_on_launch }}"
+            ask_variables_on_launch: "{{ template_info[0].ask_variables_on_launch }}"
+            ask_verbosity_on_launch: "{{ template_info[0].ask_verbosity_on_launch }}"
+            become_enabled: "{{ template_info[0].become_enabled }}"
+            credentials: "{{ credentials | default(omit, true) }}"
+            description: "{{ template_info[0].description }}"
+            diff_mode: "{{ template_info[0].diff_mode }}"
+            execution_environment: "{{ template_info[0].execution_environment }}"
+            extra_vars: "{% if not template_info[0].extra_vars | from_yaml %}{}{% else %}blah{% endif %}"
+            force_handlers: "{{ template_info[0].force_handlers }}"
+            forks: "{{ template_info[0].forks }}"
+            host_config_key: "{{ template_info[0].host_config_key }}"
+            inventory: "{{ template_info[0].inventory }}"
+            job_slice_count: "{{ template_info[0].job_slice_count }}"
+            job_tags: "{{ template_info[0].job_tags }}"
+            job_type: "{{ template_info[0].job_type }}"
+            limit: "{{ template_info[0].limit }}"
+            name: "{{ template_info[0].name }}"
+            organization: "{{ template_info[0].organization }}"
+            playbook: "{{ template_info[0].playbook }}"
+            project: "{{ template_info[0].project }}"
+            scm_branch: "{{ template_info[0].scm_branch }}"
+            skip_tags: "{{ template_info[0].skip_tags }}"
+            start_at_task: "{{ template_info[0].start_at_task }}"
+            survey_enabled: "{{ template_info[0].survey_enabled }}"
+            timeout: "{{ template_info[0].timeout }}"
+            use_fact_cache: "{{ template_info[0].use_fact_cache }}"
+            verbosity: "{{ template_info[0].verbosity }}"
+            webhook_credential: "{{ template_info[0].webhook_credential | default(omit, true) }}"
+            webhook_service: "{{ template_info[0].webhook_service }}"
+            validate_certs: "$CONTROLLER_VERIFY_SSL"
 
-      - name: figure out creds for JT
-        set_fact:
-          credentials: "{% if credentials | length>0 %}{{ credentials | split(',') }}{% endif %}"
-
-      - name: update project for scm allow_override and scm_update_on_launch
-        awx.awx.project:
-          name: "{{ project_var }}"
-          state: present
-          description: "{{ project_info[0].description }}"
-          organization: "{{ project_info[0].organization }}"
-          default_environment: "{{ project_info[0].default_environment }}"
-          scm_type: "{{ project_info[0].scm_type }}"
-          scm_url: "$scm_url"
-          scm_branch: "{{ project_info[0].scm_branch }}"
-          scm_refspec: "{{ scm_refspec }}"
-          # credential: "{{ project_info[0].credential }}"
-          scm_clean: "{{ project_info[0].scm_clean }}"
-          scm_delete_on_update: "{{ project_info[0].scm_delete_on_update }}"
-          scm_track_submodules: "{{ project_info[0].scm_track_submodules }}"
-          scm_update_on_launch: True
-          allow_override: True
-          validate_certs: "$CONTROLLER_VERIFY_SSL"
-
-      # This task is only updating ask_scm_branch_on_launch
-      - name: update job template to turn ask_scm_branch_on_launch
-        awx.awx.job_template:
-          allow_simultaneous: "{{ template_info[0].allow_simultaneous }}"
-          ask_credential_on_launch: "{{ template_info[0].ask_credential_on_launch }}"
-          ask_diff_mode_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
-          ask_inventory_on_launch: "{{ template_info[0].ask_diff_mode_on_launch }}"
-          ask_job_type_on_launch: "{{ template_info[0].ask_job_type_on_launch }}"
-          ask_limit_on_launch: "{{ template_info[0].ask_limit_on_launch }}"
-          ask_scm_branch_on_launch: True
-          ask_skip_tags_on_launch: "{{ template_info[0].ask_skip_tags_on_launch }}"
-          ask_tags_on_launch: "{{ template_info[0].ask_tags_on_launch }}"
-          ask_variables_on_launch: "{{ template_info[0].ask_variables_on_launch }}"
-          ask_verbosity_on_launch: "{{ template_info[0].ask_verbosity_on_launch }}"
-          become_enabled: "{{ template_info[0].become_enabled }}"
-          credentials: "{{ credentials | default(omit, true) }}"
-          description: "{{ template_info[0].description }}"
-          diff_mode: "{{ template_info[0].diff_mode }}"
-          execution_environment: "{{ template_info[0].execution_environment }}"
-          extra_vars: "{% if not template_info[0].extra_vars | from_yaml %}{}{% else %}blah{% endif %}"
-          force_handlers: "{{ template_info[0].force_handlers }}"
-          forks: "{{ template_info[0].forks }}"
-          host_config_key: "{{ template_info[0].host_config_key }}"
-          inventory: "{{ template_info[0].inventory }}"
-          job_slice_count: "{{ template_info[0].job_slice_count }}"
-          job_tags: "{{ template_info[0].job_tags }}"
-          job_type: "{{ template_info[0].job_type }}"
-          limit: "{{ template_info[0].limit }}"
-          name: "{{ template_info[0].name }}"
-          organization: "{{ template_info[0].organization }}"
-          playbook: "{{ template_info[0].playbook }}"
-          project: "{{ template_info[0].project }}"
-          scm_branch: "{{ template_info[0].scm_branch }}"
-          skip_tags: "{{ template_info[0].skip_tags }}"
-          start_at_task: "{{ template_info[0].start_at_task }}"
-          survey_enabled: "{{ template_info[0].survey_enabled }}"
-          timeout: "{{ template_info[0].timeout }}"
-          use_fact_cache: "{{ template_info[0].use_fact_cache }}"
-          verbosity: "{{ template_info[0].verbosity }}"
-          webhook_credential: "{{ template_info[0].webhook_credential | default(omit, true) }}"
-          webhook_service: "{{ template_info[0].webhook_service }}"
-          validate_certs: "$CONTROLLER_VERIFY_SSL"
-
-      when: project_var|length > 0
+      #when: project_var|length > 0
 
     - name: launch a job and wait for the job
       when: job_template_var | length > 0
