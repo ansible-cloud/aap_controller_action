@@ -78,6 +78,7 @@ tee playbook.yml << EOF
         workflow_template_var: "$WORKFLOW_TEMPLATE"
         extra_vars: "$EXTRA_VARS"
         project_var: "$CONTROLLER_PROJECT"
+        scm_branch: "$scm_branch"
 
     - name: print out extra_vars
       debug:
@@ -97,7 +98,6 @@ tee playbook.yml << EOF
             project_info: "{{ query('awx.awx.controller_api', 'projects', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$CONTROLLER_PROJECT' }) }}"
             template_info: "{{ query('awx.awx.controller_api', 'job_templates', verify_ssl=$CONTROLLER_VERIFY_SSL, query_params={ 'name': '$JOB_TEMPLATE' }) }}"
             scm_url: "$scm_url"
-            scm_branch: "$scm_branch"
             scm_refspec: "refs/pull/*:refs/remotes/origin/pull/*"
 
         - name: print out existing project settings to terminal
