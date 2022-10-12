@@ -162,11 +162,11 @@ tee playbook.yml << EOF
         - name: figure out creds for JT
           set_fact:
             credentials: "{% if template_info[0].summary_fields['credentials'] | length>0 %}{% for cred in template_info[0].summary_fields['credentials'] %}{{ cred.name }}{% if loop.length > 1 %},{% endif %}{% endfor %}{% endif %}"
-    
+
         - name: figure out creds for JT
           set_fact:
             credentials: "{% if credentials | length>0 %}{{ credentials | split(',') }}{% endif %}"
-    
+
         - name: update project for scm allow_override and scm_update_on_launch
           awx.awx.project:
             name: "{{ project_var }}"
@@ -185,7 +185,7 @@ tee playbook.yml << EOF
             scm_update_on_launch: True
             allow_override: True
             validate_certs: "$CONTROLLER_VERIFY_SSL"
-    
+
         # This task is only updating ask_scm_branch_on_launch
         - name: update job template to turn ask_scm_branch_on_launch
           awx.awx.job_template:
@@ -277,11 +277,15 @@ tee playbook.yml << EOF
             extra_vars: "{{ extra_vars |  default(omit, true) }}"
             validate_certs: "$CONTROLLER_VERIFY_SSL"
             scm_branch: "{{ scm_branch |  default(omit, true) }}"
-          register: job_output
+          register: workflow_output
+
+        - name: print out workflow_output
+          debug:
+            var: workflow_output
 
         - name: Wait for workflow
           awx.awx.job_wait:
-            job_id: "{{ job_output.id }}"
+            job_id: "{{ workflow_output.id }}"
             job_type: workflow_jobs
             timeout: 3600
             validate_certs: "$CONTROLLER_VERIFY_SSL"
