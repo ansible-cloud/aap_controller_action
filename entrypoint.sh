@@ -271,9 +271,9 @@ tee playbook.yml << EOF
     - name: launch a workflow and wait for the workflow to finish
       when: workflow_template_var | length > 0
       block:
-        - name: Launch a job template with extra_vars on remote controller instance when project is set
+        - name: Launch a workflow template with extra_vars on remote controller instance when project is set
           awx.awx.workflow_launch:
-            workflow_template: "{{ job_template_var }}"
+            workflow_template: "{{ workflow_template_var }}"
             extra_vars: "{{ extra_vars |  default(omit, true) }}"
             validate_certs: "$CONTROLLER_VERIFY_SSL"
             scm_branch: "{{ scm_branch |  default(omit, true) }}"
