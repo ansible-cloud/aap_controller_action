@@ -1,4 +1,4 @@
-FROM redhat/ubi9
+FROM ubi9
 COPY entrypoint.sh /entrypoint.sh
 RUN dnf install python3.9 -y
 RUN dnf install python3-pip -y
