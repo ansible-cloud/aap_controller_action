@@ -58,8 +58,8 @@ echo "scm_branch is $scm_branch"
 tee ansible.cfg << EOF
 [defaults]
 COLLECTIONS_PATHS = /root/.ansible/collections
-stdout_callback=community.general.yaml
-callbacks_enabled=ansible.posix.profile_tasks
+result_format = yaml
+callbacks_enabled = ansible.posix.profile_tasks
 
 EOF
 
