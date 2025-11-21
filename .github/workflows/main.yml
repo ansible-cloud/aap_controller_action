@@ -1,5 +1,5 @@
 on:
-  pull_request_target:
+  pull_request:
   workflow_dispatch:
     inputs:
       validate_certs:
@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Load the ansible-cloud action
         id: controller_job
-        uses: ansible-cloud/aap_controller_action@v2.1.7
+        uses: abwalczyk/aap_controller_action@main
         with:
           controller_host: ${{ secrets.CONTROLLER_HOST }}
           controller_username: ${{ secrets.CONTROLLER_USERNAME }}
