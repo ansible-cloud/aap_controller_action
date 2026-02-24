@@ -4,4 +4,4 @@
   tasks:
     - name: print host vars for localhost
       debug:
-        var: hostvars["{{ ansible_host }}"]
+        msg: "hello colin, this worked"
