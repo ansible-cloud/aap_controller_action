@@ -91,7 +91,9 @@ tee playbook.yml << EOF
           - "workflow_template_var | length is {{ workflow_template_var | length }}"
 
     - name: project update and sync
-      when: workflow_template_var|length == 0
+      when:
+        - workflow_template_var|length == 0
+        - project_var|length > 0
       block:
         - name: retrieve info on existing specified project in Automation controller
           set_fact:
@@ -175,7 +177,7 @@ tee playbook.yml << EOF
             organization: "{{ project_info[0].organization }}"
             default_environment: "{{ project_info[0].default_environment }}"
             scm_type: "{{ project_info[0].scm_type }}"
-            scm_url: "$scm_url"
+            scm_url: "{{ project_info[0].scm_url }}"
             scm_branch: "{{ project_info[0].scm_branch }}"
             scm_refspec: "{{ scm_refspec }}"
             # credential: "{{ project_info[0].credential }}"
