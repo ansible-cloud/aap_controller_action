@@ -163,11 +163,7 @@ tee playbook.yml << EOF
 
         - name: figure out creds for JT
           set_fact:
-            credentials: "{% if template_info[0].summary_fields['credentials'] | length>0 %}{% for cred in template_info[0].summary_fields['credentials'] %}{{ cred.name }}{% if loop.length > 1 %},{% endif %}{% endfor %}{% endif %}"
-
-        - name: figure out creds for JT
-          set_fact:
-            credentials: "{% if credentials | length>0 %}{{ credentials | split(',') }}{% endif %}"
+            credentials: "{{ template_info[0].summary_fields['credentials'] | map(attribute='name') | list }}"
 
         - name: update project for scm allow_override and scm_update_on_launch
           awx.awx.project:
@@ -241,7 +237,7 @@ tee playbook.yml << EOF
             job_template: "{{ job_template_var }}"
             extra_vars: "{{ extra_vars |  default(omit, true) }}"
             validate_certs: "$CONTROLLER_VERIFY_SSL"
-            scm_branch: "{{ scm_branch |  default(omit, true) }}"
+            scm_branch: "{{ scm_branch if project_var | length > 0 else omit }}"
           register: job_output
 
         - name: Wait for job
