@@ -117,4 +117,4 @@ You need to setup 3 (three) secrets:
 
 ## I need help!
 
-Open an [issue](https://github.com/ansible-cloud/aap_controller_action/issues) or join us on [Slack](https://join.slack.com/t/ansiblenetwork/shared_invite/zt-3zeqmhhx-zuID9uJqbbpZ2KdVeTwvzw)
+Open an [issue](https://github.com/ansible-cloud/aap_controller_action/issues) or join us on the [Ansible Community Forum](https://forum.ansible.com)
