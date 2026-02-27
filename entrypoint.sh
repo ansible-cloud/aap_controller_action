@@ -12,6 +12,10 @@ if [ -z "$CONTROLLER_HOST" ]; then
   exit 1
 fi
 
+CONTROLLER_HOST="${CONTROLLER_HOST#https://}"
+CONTROLLER_HOST="${CONTROLLER_HOST#http://}"
+CONTROLLER_HOST="${CONTROLLER_HOST%/}"
+
 if [ -z "$CONTROLLER_USERNAME" ]; then
   echo "Automation controller username is not set. Exiting."
   exit 1
@@ -247,23 +251,16 @@ tee playbook.yml << EOF
             validate_certs: "$CONTROLLER_VERIFY_SSL"
 
         - name: retrieve job info
-          when: job_template_var|length > 0
-          uri:
-            url: https://$CONTROLLER_HOST/api/v2/jobs/{{ job_output.id }}/stdout/?format=json
-            method: GET
-            user: "$CONTROLLER_USERNAME"
-            password: "$CONTROLLER_PASSWORD"
-            validate_certs: "$CONTROLLER_VERIFY_SSL"
-            force_basic_auth: yes
-          register: playbook_output
+          set_fact:
+            playbook_output: "{{ lookup('awx.awx.controller_api', 'jobs/' + (job_output.id | string) + '/stdout/', query_params={'format': 'json'}, verify_ssl=$CONTROLLER_VERIFY_SSL) }}"
 
         - name: display Automation controller job output
           debug:
-            var: playbook_output.json.content
+            var: playbook_output.content
 
         - name: copy playbook output from Automation controller to file
           ansible.builtin.copy:
-            content: "{{ playbook_output.json.content }}"
+            content: "{{ playbook_output.content }}"
             dest: job_output.txt
 
     - name: launch a workflow and wait for the workflow to finish
